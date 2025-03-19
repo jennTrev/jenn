@@ -3,8 +3,8 @@ import { Sequelize } from 'sequelize';
 // Determinar si estamos en Render o en otro entorno
 const isRender = process.env.RENDER || false;
 const DATABASE_URL = isRender
-  ? "postgresql://reactvolt_user:xBYmslgaJnttDWRiMRgLCxmJPjPsoMmu@dpg-cvbii30fnakc73dlb8b0-a/reactvolt" // Internal URL
-  : "postgresql://reactvolt_user:xBYmslgaJnttDWRiMRgLCxmJPjPsoMmu@dpg-cvbii30fnakc73dlb8b0-a.oregon-postgres.render.com/reactvolt"; // External URL
+  ? "postgresql://vol_3ym1_user:G1Ij3jmF1vbEmIVX7X80Rsr9tBTGzgyp@dpg-cvccn0lds78s73ahnjog-a/vol_3ym1" // Internal URL
+  : "postgresql://vol_3ym1_user:G1Ij3jmF1vbEmIVX7X80Rsr9tBTGzgyp@dpg-cvccn0lds78s73ahnjog-a.oregon-postgres.render.com/vol_3ym1"; // External URL
 
 // Evitar múltiples conexiones en AWS Lambda
 let sequelize;
