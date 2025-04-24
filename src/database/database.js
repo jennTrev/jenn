@@ -2,11 +2,12 @@ import { Sequelize } from 'sequelize';
 
 // Determinar si estamos en Render o en otro entorno
 const isRender = process.env.RENDER || false;
-const DATABASE_URL = isRender
-  ? "postgresql://vol_3ym1_user:G1Ij3jmF1vbEmIVX7X80Rsr9tBTGzgyp@dpg-cvccn0lds78s73ahnjog-a/vol_3ym1" // Internal URL
-  : "postgresql://vol_3ym1_user:G1Ij3jmF1vbEmIVX7X80Rsr9tBTGzgyp@dpg-cvccn0lds78s73ahnjog-a.oregon-postgres.render.com/vol_3ym1"; // External URL
 
-// Evitar múltiples conexiones en AWS Lambda
+const DATABASE_URL = isRender
+  ? "postgresql://voley_user:OMpOzpaJG7yjk9hEtTTUxewVC4DlPnxS@dpg-d02n2rqdbo4c73f08e40-a/voley" // Internal URL
+  : "postgresql://voley_user:OMpOzpaJG7yjk9hEtTTUxewVC4DlPnxS@dpg-d02n2rqdbo4c73f08e40-a.oregon-postgres.render.com/voley"; // External URL
+
+// Evitar múltiples conexiones en AWS Lambda o entorno Serverless
 let sequelize;
 
 if (!global.sequelize) {
@@ -14,11 +15,11 @@ if (!global.sequelize) {
     dialect: "postgres",
     dialectOptions: {
       ssl: {
-        require: true, // Requerido para conexiones seguras
-        rejectUnauthorized: false, // Permitir certificados auto-firmados en AWS y Render
+        require: true,
+        rejectUnauthorized: false,
       },
     },
-    logging: false, // Desactiva logs de SQL en producción
+    logging: false,
   });
 
   global.sequelize = sequelize;

@@ -6,20 +6,23 @@ let isConnected = false;
 async function connectDB() {
     if (!isConnected) {
         try {
-            await bd.authenticate(); // Usamos authenticate() en vez de sync() para evitar sobrescribir la BD
+            await bd.authenticate(); // Solo autenticación, sin sobrescribir BD
             console.log("✅ Base de datos conectada correctamente");
             isConnected = true;
         } catch (error) {
             console.error("❌ Error al conectar con la base de datos:", error);
+            process.exit(1); // Sale del proceso si no se puede conectar
         }
     }
 }
 
-async function main() {
-    await connectDB(); // Conectar antes de iniciar el servidor
-    app.listen(3000, () => {
+async function startServer() {
+    await connectDB(); // Primero se conecta la BD
+    const PORT = process.env.PORT || 3000;
+
+    app.listen(PORT, () => {
         console.log("Server está levantado en http://localhost:3000");
     });
 }
-//asdasd
-main();
+
+startServer();
