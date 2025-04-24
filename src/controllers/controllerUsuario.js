@@ -1,5 +1,5 @@
 import { usuario } from "../models/usuarios.js";
-//ssdsads
+
 // Obtener todos los usuarios
 export const getUsuarios = async (req, res) => {
     try {
@@ -15,7 +15,8 @@ export const getUsuarios = async (req, res) => {
                 contrasena: usuario.contrasena,
                 altura: usuario.altura,
                 posicion: usuario.posicion,
-                fecha_nacimiento: usuario.fecha_nacimiento
+                fecha_nacimiento: usuario.fecha_nacimiento,
+                carrera: usuario.carrera // Añadir carrera
             };
         });
         res.status(200).json(formatoUsuarios);
@@ -45,7 +46,8 @@ export const getUsuario = async (req, res) => {
             contrasena: unUsuario.contrasena,
             altura: unUsuario.altura,
             posicion: unUsuario.posicion,
-            fecha_nacimiento: unUsuario.fecha_nacimiento
+            fecha_nacimiento: unUsuario.fecha_nacimiento,
+            carrera: unUsuario.carrera // Añadir carrera
         };
 
         res.status(200).json(formatoUsuario);
@@ -58,10 +60,10 @@ export const getUsuario = async (req, res) => {
 // Crear un nuevo usuario
 export const createUsuario = async (req, res) => {
     try {
-        const { nombre, apellido, user, contrasena, rol, correo, altura, posicion, fecha_nacimiento } = req.body;
+        const { nombre, apellido, user, contrasena, rol, correo, altura, posicion, fecha_nacimiento, carrera } = req.body;
 
+        // Si el rol es 'entrenador' o 'tecnico', no enviar 'carrera'
         if (rol === 'entrenador' || rol === 'tecnico') {
-            // Si el rol es entrenador o tecnico, solo se envían nombre, apellido, user, contrasena y correo
             const nuevoUsuario = await usuario.create({
                 nombre,
                 apellido,
@@ -72,7 +74,7 @@ export const createUsuario = async (req, res) => {
             });
             res.status(201).json(nuevoUsuario);
         } else if (rol === 'jugador') {
-            // Si el rol es jugador, se envían todos los campos
+            // Si el rol es 'jugador', se envían todos los campos
             const nuevoUsuario = await usuario.create({
                 nombre,
                 apellido,
@@ -82,7 +84,8 @@ export const createUsuario = async (req, res) => {
                 correo,
                 altura,
                 posicion,
-                fecha_nacimiento
+                fecha_nacimiento,
+                carrera // Solo si es jugador, incluir carrera
             });
             res.status(201).json(nuevoUsuario);
         } else {
@@ -98,7 +101,7 @@ export const createUsuario = async (req, res) => {
 export const updateUsuario = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre, apellido, user, contrasena, rol, correo, altura, posicion, fecha_nacimiento } = req.body;
+        const { nombre, apellido, user, contrasena, rol, correo, altura, posicion, fecha_nacimiento, carrera } = req.body;
 
         const usuarioExistente = await usuario.findByPk(id);
 
@@ -113,11 +116,12 @@ export const updateUsuario = async (req, res) => {
         usuarioExistente.rol = rol;
         usuarioExistente.correo = correo;
 
-        // Solo se actualizan los campos extras si el rol es jugador
+        // Si el rol es 'jugador', se actualizan los campos adicionales, incluyendo carrera
         if (rol === 'jugador') {
             usuarioExistente.altura = altura;
             usuarioExistente.posicion = posicion;
             usuarioExistente.fecha_nacimiento = fecha_nacimiento;
+            usuarioExistente.carrera = carrera; // Solo si es jugador, actualizar carrera
         }
 
         await usuarioExistente.save();

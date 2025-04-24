@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import { bd } from "../database/database.js";
-//sadasda
+
 export const usuario = bd.define('usuarios', {
     id: {
         type: DataTypes.INTEGER,
@@ -47,7 +47,11 @@ export const usuario = bd.define('usuarios', {
         type: DataTypes.STRING(255),
         allowNull: true,
     },
+    carrera: {
+        type: DataTypes.STRING(255),
+        allowNull: true, 
+    },
 }, {
     tableName: 'usuarios',
-    timestamps: false,  // Esto deshabilita los campos `createdAt` y `updatedAt`
+    timestamps: false,  // Esto deshabilita los campos createdAt y updatedAt
 });
