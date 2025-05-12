@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUsuario, deleteUsuario, getUsuario, getUsuarios, updateUsuario } from "../controllers/controllerUsuario.js";
+import { createUsuario, deleteUsuario, getUsuario, getUsuarios, updateUsuario, enviarComandoESP32, getPusherStatus} from "../controllers/controllerUsuario.js";
 
 import { login } from "../controllers/authController.js";
 
