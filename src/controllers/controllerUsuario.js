@@ -161,7 +161,8 @@ export const deleteUsuario = async (req, res) => {
   }
 }
 
-// NUEVA FUNCIONALIDAD: Enviar comando a ESP32 a través de Pusher
+
+// Enviar comando a ESP32 a través de Pusher
 export const enviarComandoESP32 = async (req, res) => {
   try {
     const { comando, userId } = req.body
@@ -193,7 +194,6 @@ export const enviarComandoESP32 = async (req, res) => {
       error: error.message,
     })
   }
-}
 
 // Obtener estado de conexión con Pusher
 export const getPusherStatus = async (req, res) => {
