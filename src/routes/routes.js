@@ -6,8 +6,23 @@ import {
   updateUsuario,
   deleteUsuario,
   enviarComandoESP32,
-  getPusherStatus,
-} from "../controllers/usuarios.js"
+} from "../controllers/controllerUsuario.js"
+
+import {
+  getReacciones,
+  getReaccion,
+  createReaccion,
+  updateReaccion,
+  deleteReaccion,
+} from "../controllers/reaccion.controller.js"
+
+import {
+  getAlfombras,
+  getAlfombra,
+  createAlfombra,
+  updateAlfombra,
+  deleteAlfombra,
+} from "../controllers/alfombra.controller.js"
 
 const router = Router()
 
@@ -18,8 +33,20 @@ router.post("/usuarios", createUsuario)
 router.put("/usuarios/:id", updateUsuario)
 router.delete("/usuarios/:id", deleteUsuario)
 
+router.get("/reacciones", getReacciones)
+router.get("/reacciones/:id", getReaccion)
+router.post("/reacciones", createReaccion)
+router.put("/reacciones/:id", updateReaccion)
+router.delete("/reacciones/:id", deleteReaccion)
+
+router.get("/alfombras", getAlfombras)
+router.get("/alfombras/:id", getAlfombra)
+router.post("/alfombras", createAlfombra)
+router.put("/alfombras/:id", updateAlfombra)
+router.delete("/alfombras/:id", deleteAlfombra)
+
+
 // Nuevas rutas para Pusher/ESP32
 router.post("/esp32/comando", enviarComandoESP32)
-router.get("/esp32/status", getPusherStatus)
 
 export default router

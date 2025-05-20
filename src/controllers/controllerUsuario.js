@@ -194,25 +194,5 @@ export const enviarComandoESP32 = async (req, res) => {
       error: error.message,
     })
   }
-
-// Obtener estado de conexión con Pusher
-export const getPusherStatus = async (req, res) => {
-  try {
-    // Verificar la conexión con Pusher
-    const status = await pusher.trigger("wsjenn", "status-check", {
-      timestamp: new Date().toISOString(),
-    })
-
-    res.status(200).json({
-      connected: true,
-      message: "Conexión con Pusher establecida correctamente",
-    })
-  } catch (error) {
-    console.error("Error al verificar conexión con Pusher:", error)
-    res.status(500).json({
-      connected: false,
-      message: "Error al verificar conexión con Pusher",
-      error: error.message,
-    })
-  }
 }
+
