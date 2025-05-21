@@ -23,7 +23,7 @@ import {
   updateAlfombra,
   deleteAlfombra,
 } from "../controllers/alfombra.controller.js"
-
+import { login  } from "../controllers/authController.js"
 const router = Router()
 
 // Rutas existentes
@@ -45,7 +45,7 @@ router.post("/alfombras", createAlfombra)
 router.put("/alfombras/:id", updateAlfombra)
 router.delete("/alfombras/:id", deleteAlfombra)
 
-
+router.post("/login", login)
 // Nuevas rutas para Pusher/ESP32
 router.post("/esp32/comando", enviarComandoESP32)
 
