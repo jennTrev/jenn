@@ -4,8 +4,8 @@ import { Sequelize } from 'sequelize';
 const isRender = process.env.RENDER || false;
 
 const DATABASE_URL = isRender
-  ? "postgresql://voley_user:OMpOzpaJG7yjk9hEtTTUxewVC4DlPnxS@dpg-d02n2rqdbo4c73f08e40-a/voley" // Internal URL
-  : "postgresql://voley_user:OMpOzpaJG7yjk9hEtTTUxewVC4DlPnxS@dpg-d02n2rqdbo4c73f08e40-a.oregon-postgres.render.com/voley"; // External URL
+  ? "postgresql://voleyreactjenny_user:W9IzovR64alVl1zcGpKN4d64faaSUceP@dpg-d0n55rali9vc7383e810-a/voleyreactjenny" // Internal URL
+  : "postgresql://voleyreactjenny_user:W9IzovR64alVl1zcGpKN4d64faaSUceP@dpg-d0n55rali9vc7383e810-a.oregon-postgres.render.com/voleyreactjenny"; // External URL
 
 // Evitar múltiples conexiones en AWS Lambda o entorno Serverless
 let sequelize;
