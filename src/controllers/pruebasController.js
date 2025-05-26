@@ -20,15 +20,15 @@ export const obtenerPruebasUsuario = async (req, res) => {
     // Obtener pruebas de alfombra
     const pruebasAlfombra = await alfombra.findAll({
       where: { jugador_id: userId },
-      order: [["createdAt", "DESC"]],
-      limit: 50, // Limitar a las últimas 50 pruebas
+      order: [["id", "DESC"]],
+      limit: 50,
     })
 
     // Obtener pruebas de reacción
     const pruebasReaccion = await reaccion.findAll({
       where: { jugador_id: userId },
-      order: [["createdAt", "DESC"]],
-      limit: 50, // Limitar a las últimas 50 pruebas
+      order: [["id", "DESC"]],
+      limit: 50,
     })
 
     res.json({

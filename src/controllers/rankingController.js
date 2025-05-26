@@ -18,7 +18,6 @@ export const rankingAlfombra = async (req, res) => {
       include: [
         {
           model: alfombra,
-          as: "alfombras", // Asegúrate de que coincida con la asociación
           attributes: [],
           required: true, // INNER JOIN para solo usuarios con pruebas
         },
@@ -29,6 +28,7 @@ export const rankingAlfombra = async (req, res) => {
         "apellido",
         "rol",
         "posicion",
+        "carrera",
         [sequelize.fn("COUNT", sequelize.col("alfombras.id")), "total_pruebas"],
         [sequelize.fn("AVG", sequelize.col("alfombras.aciertos")), "promedio_aciertos"],
         [
@@ -82,7 +82,6 @@ export const rankingReaccion = async (req, res) => {
       include: [
         {
           model: reaccion,
-          as: "reacciones", // Asegúrate de que coincida con la asociación
           attributes: [],
           required: true, // INNER JOIN para solo usuarios con pruebas
         },
@@ -93,6 +92,7 @@ export const rankingReaccion = async (req, res) => {
         "apellido",
         "rol",
         "posicion",
+        "carrera",
         [sequelize.fn("COUNT", sequelize.col("reacciones.id")), "total_pruebas"],
         [sequelize.fn("AVG", sequelize.col("reacciones.aciertos")), "promedio_aciertos"],
         [sequelize.fn("AVG", sequelize.col("reacciones.tiempo_total")), "tiempo_promedio"],
@@ -149,7 +149,6 @@ export const rankingGeneral = async (req, res) => {
       include: [
         {
           model: alfombra,
-          as: "alfombras",
           attributes: [],
           required: false,
         },
@@ -160,6 +159,7 @@ export const rankingGeneral = async (req, res) => {
         "apellido",
         "rol",
         "posicion",
+        "carrera",
         [sequelize.fn("COUNT", sequelize.col("alfombras.id")), "pruebas_alfombra"],
         [
           sequelize.fn("AVG", sequelize.literal("(alfombras.aciertos * 100.0 / alfombras.repeticiones)")),
@@ -167,6 +167,7 @@ export const rankingGeneral = async (req, res) => {
         ],
       ],
       group: ["usuario.id"],
+      order: [["id", "ASC"]],
       subQuery: false,
       raw: true,
     })
@@ -177,7 +178,6 @@ export const rankingGeneral = async (req, res) => {
       include: [
         {
           model: reaccion,
-          as: "reacciones",
           attributes: [],
           required: false,
         },
@@ -189,6 +189,7 @@ export const rankingGeneral = async (req, res) => {
         [sequelize.fn("AVG", sequelize.col("reacciones.tiempo_total")), "tiempo_promedio"],
       ],
       group: ["usuario.id"],
+      order: [["id", "ASC"]],
       subQuery: false,
       raw: true,
     })
@@ -203,6 +204,7 @@ export const rankingGeneral = async (req, res) => {
         apellido: userAlf.apellido,
         rol: userAlf.rol,
         posicion: userAlf.posicion,
+        carrera: userAlf.carrera,
         pruebas_alfombra: userAlf.pruebas_alfombra || 0,
         porcentaje_alfombra: userAlf.porcentaje_alfombra || 0,
         pruebas_reaccion: userReac.pruebas_reaccion || 0,
@@ -263,6 +265,7 @@ export const compararUsuarios = async (req, res) => {
       where: {
         id: [userId1, userId2],
       },
+      order: [["id", "ASC"]],
     })
 
     if (usuarios.length !== 2) {
