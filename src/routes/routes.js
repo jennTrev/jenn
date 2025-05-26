@@ -24,6 +24,18 @@ import {
   deleteAlfombra,
 } from "../controllers/alfombra.controller.js"
 import { login  } from "../controllers/authController.js"
+
+import { 
+    obtenerPruebasUsuario, 
+    obtenerEstadisticasUsuario 
+} from '../controllers/pruebasController.js';
+import { 
+    rankingAlfombra, 
+    rankingReaccion, 
+    rankingGeneral, 
+    compararUsuarios 
+} from '../controllers/rankingController.js';
+
 const router = Router()
 
 // Rutas existentes
@@ -48,5 +60,16 @@ router.delete("/alfombras/:id", deleteAlfombra)
 router.post("/login", login)
 // Nuevas rutas para Pusher/ESP32
 router.post("/esp32/comando", enviarComandoESP32)
+// Rutas para pruebas individuales
+router.get('/usuario/:userId/pruebas', obtenerPruebasUsuario);
+router.get('/usuario/:userId/estadisticas', obtenerEstadisticasUsuario);
+
+// Rutas para rankings
+router.get('/ranking/alfombra', rankingAlfombra);
+router.get('/ranking/reaccion', rankingReaccion);
+router.get('/ranking/general', rankingGeneral);
+
+// Ruta para comparar usuarios
+router.get('/comparar/:userId1/:userId2', compararUsuarios);
 
 export default router

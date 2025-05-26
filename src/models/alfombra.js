@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import { bd } from "../database/database.js";
-import { usuario } from "../models/usuarios.js";
+import { usuario } from "../models/usuarios.js"
 
 export const alfombra = bd.define('alfombras', {
     id: {
