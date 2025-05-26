@@ -12,38 +12,38 @@ export const rankingAlfombra = async (req, res) => {
     if (rol && ["entrenador", "jugador", "tecnico"].includes(rol)) {
       whereClause.rol = rol
     }
-
-    const ranking = await usuario.findAll({
-      where: whereClause,
-      include: [
-        {
-          model: alfombra,
-          attributes: [],
-          required: true, // INNER JOIN para solo usuarios con pruebas
-        },
-      ],
-      attributes: [
-        "id",
-        "nombre",
-        "apellido",
-        "rol",
-        "posicion",
-        "carrera",
-        [sequelize.fn("COUNT", sequelize.col("alfombras.id")), "total_pruebas"],
-        [sequelize.fn("AVG", sequelize.col("alfombras.aciertos")), "promedio_aciertos"],
-        [
-          sequelize.fn("AVG", sequelize.literal("(alfombras.aciertos * 100.0 / alfombras.repeticiones)")),
-          "porcentaje_aciertos",
-        ],
-        [sequelize.fn("MAX", sequelize.col("alfombras.aciertos")), "mejor_puntuacion"],
-      ],
-      group: ["usuario.id"],
-      having: sequelize.where(sequelize.fn("COUNT", sequelize.col("alfombras.id")), ">", 0),
-      order: [[sequelize.literal("porcentaje_aciertos"), "DESC"]],
-      limit: Number.parseInt(limite),
-      subQuery: false,
-      raw: true,
-    })
+   const ranking = await usuario.findAll({
+     where: whereClause,
+     include: [
+       {
+         model: alfombra,
+         attributes: [],
+         required: true,
+       },
+     ],
+     attributes: [
+       "id",
+       "nombre",
+       "apellido",
+       "rol",
+       "posicion",
+       "carrera",
+       [sequelize.fn("COUNT", sequelize.col("alfombras.id")), "total_pruebas"],
+       [sequelize.fn("AVG", sequelize.col("alfombras.aciertos")), "promedio_aciertos"],
+       [
+         sequelize.fn("AVG", sequelize.literal("(alfombras.aciertos * 100.0 / alfombras.repeticiones)")),
+         "porcentaje_aciertos",
+       ],
+       [sequelize.fn("MAX", sequelize.col("alfombras.aciertos")), "mejor_puntuacion"],
+     ],
+     group: ["usuarios.id"], // Cambiado aquí
+     having: sequelize.where(sequelize.fn("COUNT", sequelize.col("alfombras.id")), ">", 0),
+     order: [[sequelize.literal("porcentaje_aciertos"), "DESC"]],
+     limit: Number.parseInt(limite),
+     subQuery: false,
+     raw: true,
+   });
+   
 
     res.json({
       success: true,
@@ -77,38 +77,39 @@ export const rankingReaccion = async (req, res) => {
       whereClause.rol = rol
     }
 
-    const ranking = await usuario.findAll({
-      where: whereClause,
-      include: [
-        {
-          model: reaccion,
-          attributes: [],
-          required: true, // INNER JOIN para solo usuarios con pruebas
-        },
-      ],
-      attributes: [
-        "id",
-        "nombre",
-        "apellido",
-        "rol",
-        "posicion",
-        "carrera",
-        [sequelize.fn("COUNT", sequelize.col("reacciones.id")), "total_pruebas"],
-        [sequelize.fn("AVG", sequelize.col("reacciones.aciertos")), "promedio_aciertos"],
-        [sequelize.fn("AVG", sequelize.col("reacciones.tiempo_total")), "tiempo_promedio"],
-        [sequelize.fn("MIN", sequelize.col("reacciones.tiempo_total")), "mejor_tiempo"],
-        [sequelize.fn("MAX", sequelize.col("reacciones.aciertos")), "mejor_puntuacion"],
-      ],
-      group: ["usuario.id"],
-      having: sequelize.where(sequelize.fn("COUNT", sequelize.col("reacciones.id")), ">", 0),
-      order: [
-        [sequelize.literal("promedio_aciertos"), "DESC"],
-        [sequelize.literal("tiempo_promedio"), "ASC"],
-      ],
-      limit: Number.parseInt(limite),
-      subQuery: false,
-      raw: true,
-    })
+     const ranking = await usuario.findAll({
+     where: whereClause,
+     include: [
+       {
+         model: reaccion,
+         attributes: [],
+         required: true,
+       },
+     ],
+     attributes: [
+       "id",
+       "nombre",
+       "apellido",
+       "rol",
+       "posicion",
+       "carrera",
+       [sequelize.fn("COUNT", sequelize.col("reacciones.id")), "total_pruebas"],
+       [sequelize.fn("AVG", sequelize.col("reacciones.aciertos")), "promedio_aciertos"],
+       [sequelize.fn("AVG", sequelize.col("reacciones.tiempo_total")), "tiempo_promedio"],
+       [sequelize.fn("MIN", sequelize.col("reacciones.tiempo_total")), "mejor_tiempo"],
+       [sequelize.fn("MAX", sequelize.col("reacciones.aciertos")), "mejor_puntuacion"],
+     ],
+     group: ["usuarios.id"], // Cambiado aquí
+     having: sequelize.where(sequelize.fn("COUNT", sequelize.col("reacciones.id")), ">", 0),
+     order: [
+       [sequelize.literal("promedio_aciertos"), "DESC"],
+       [sequelize.literal("tiempo_promedio"), "ASC"],
+     ],
+     limit: Number.parseInt(limite),
+     subQuery: false,
+     raw: true,
+   });
+   
 
     res.json({
       success: true,
@@ -142,58 +143,55 @@ export const rankingGeneral = async (req, res) => {
     if (rol && ["entrenador", "jugador", "tecnico"].includes(rol)) {
       whereClause.rol = rol
     }
+   const usuariosAlfombra = await usuario.findAll({
+     where: whereClause,
+     include: [
+       {
+         model: alfombra,
+         attributes: [],
+         required: false,
+       },
+     ],
+     attributes: [
+       "id",
+       "nombre",
+       "apellido",
+       "rol",
+       "posicion",
+       "carrera",
+       [sequelize.fn("COUNT", sequelize.col("alfombras.id")), "pruebas_alfombra"],
+       [
+         sequelize.fn("AVG", sequelize.literal("(alfombras.aciertos * 100.0 / alfombras.repeticiones)")),
+         "porcentaje_alfombra",
+       ],
+     ],
+     group: ["usuarios.id"], // Cambiado aquí
+     order: [["id", "ASC"]],
+     subQuery: false,
+     raw: true,
+   });
 
-    // Obtener usuarios con estadísticas de alfombra
-    const usuariosAlfombra = await usuario.findAll({
-      where: whereClause,
-      include: [
-        {
-          model: alfombra,
-          attributes: [],
-          required: false,
-        },
-      ],
-      attributes: [
-        "id",
-        "nombre",
-        "apellido",
-        "rol",
-        "posicion",
-        "carrera",
-        [sequelize.fn("COUNT", sequelize.col("alfombras.id")), "pruebas_alfombra"],
-        [
-          sequelize.fn("AVG", sequelize.literal("(alfombras.aciertos * 100.0 / alfombras.repeticiones)")),
-          "porcentaje_alfombra",
-        ],
-      ],
-      group: ["usuario.id"],
-      order: [["id", "ASC"]],
-      subQuery: false,
-      raw: true,
-    })
-
-    // Obtener usuarios con estadísticas de reacción
-    const usuariosReaccion = await usuario.findAll({
-      where: whereClause,
-      include: [
-        {
-          model: reaccion,
-          attributes: [],
-          required: false,
-        },
-      ],
-      attributes: [
-        "id",
-        [sequelize.fn("COUNT", sequelize.col("reacciones.id")), "pruebas_reaccion"],
-        [sequelize.fn("AVG", sequelize.col("reacciones.aciertos")), "promedio_reaccion"],
-        [sequelize.fn("AVG", sequelize.col("reacciones.tiempo_total")), "tiempo_promedio"],
-      ],
-      group: ["usuario.id"],
-      order: [["id", "ASC"]],
-      subQuery: false,
-      raw: true,
-    })
-
+   const usuariosReaccion = await usuario.findAll({
+     where: whereClause,
+     include: [
+       {
+         model: reaccion,
+         attributes: [],
+         required: false,
+       },
+     ],
+     attributes: [
+       "id",
+       [sequelize.fn("COUNT", sequelize.col("reacciones.id")), "pruebas_reaccion"],
+       [sequelize.fn("AVG", sequelize.col("reacciones.aciertos")), "promedio_reaccion"],
+       [sequelize.fn("AVG", sequelize.col("reacciones.tiempo_total")), "tiempo_promedio"],
+     ],
+     group: ["usuarios.id"], // Cambiado aquí
+     order: [["id", "ASC"]],
+     subQuery: false,
+     raw: true,
+   });
+   
     // Combinar resultados
     const usuariosCombinados = usuariosAlfombra.map((userAlf) => {
       const userReac = usuariosReaccion.find((ur) => ur.id === userAlf.id) || {}
@@ -204,7 +202,6 @@ export const rankingGeneral = async (req, res) => {
         apellido: userAlf.apellido,
         rol: userAlf.rol,
         posicion: userAlf.posicion,
-        carrera: userAlf.carrera,
         pruebas_alfombra: userAlf.pruebas_alfombra || 0,
         porcentaje_alfombra: userAlf.porcentaje_alfombra || 0,
         pruebas_reaccion: userReac.pruebas_reaccion || 0,
@@ -265,7 +262,6 @@ export const compararUsuarios = async (req, res) => {
       where: {
         id: [userId1, userId2],
       },
-      order: [["id", "ASC"]],
     })
 
     if (usuarios.length !== 2) {
