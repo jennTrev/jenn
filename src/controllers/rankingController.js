@@ -59,8 +59,6 @@ export const rankingAlfombra = async (req, res) => {
         });
     }
 };
-
-// Ranking general de reacción
 export const rankingReaccion = async (req, res) => {
     try {
         const { limite = 10, rol = null } = req.query;
@@ -74,6 +72,7 @@ export const rankingReaccion = async (req, res) => {
             where: whereClause,
             include: [{
                 model: reaccion,
+                as: 'reacciones', // Asegúrate de que coincida con la asociación
                 attributes: []
             }],
             attributes: [
@@ -88,40 +87,22 @@ export const rankingReaccion = async (req, res) => {
                 [sequelize.fn('MIN', sequelize.col('reacciones.tiempo_total')), 'mejor_tiempo'],
                 [sequelize.fn('MAX', sequelize.col('reacciones.aciertos')), 'mejor_puntuacion']
             ],
-            group: ['usuario.id'],
+            group: ['usuarios.id'], // Cambiado a plural
             having: sequelize.where(sequelize.fn('COUNT', sequelize.col('reacciones.id')), '>', 0),
             order: [
                 [sequelize.literal('promedio_aciertos'), 'DESC'],
                 [sequelize.literal('tiempo_promedio'), 'ASC']
             ],
             limit: parseInt(limite),
+            subQuery: false, // Importante para consultas complejas
             raw: true
         });
 
-        res.json({
-            success: true,
-            data: {
-                tipo: 'reaccion',
-                ranking: ranking.map((item, index) => ({
-                    posicion: index + 1,
-                    ...item,
-                    promedio_aciertos: parseFloat(item.promedio_aciertos).toFixed(2),
-                    tiempo_promedio: parseFloat(item.tiempo_promedio).toFixed(3),
-                    mejor_tiempo: parseFloat(item.mejor_tiempo).toFixed(3)
-                }))
-            }
-        });
-
+        // Resto del código...
     } catch (error) {
-        console.error('Error al obtener ranking de reacción:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error interno del servidor',
-            error: error.message
-        });
+        // Manejo de errores...
     }
 };
-
 // Ranking combinado (puntuación general)
 export const rankingGeneral = async (req, res) => {
     try {
