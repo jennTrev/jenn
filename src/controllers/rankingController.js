@@ -30,7 +30,8 @@ export const rankingAlfombra = async (req, res) => {
                 [sequelize.fn('AVG', sequelize.literal('(alfombras.aciertos * 100.0 / alfombras.repeticiones)')), 'porcentaje_aciertos'],
                 [sequelize.fn('MAX', sequelize.col('alfombras.aciertos')), 'mejor_puntuacion']
             ],
-            group: ['usuario.id'],
+            group: ['usuarios.id'], // Cambiar 'usuario.id' a 'usuarios.id'
+
             having: sequelize.where(sequelize.fn('COUNT', sequelize.col('alfombras.id')), '>', 0),
             order: [[sequelize.literal('porcentaje_aciertos'), 'DESC']],
             limit: parseInt(limite),
@@ -102,8 +103,7 @@ export const rankingReaccion = async (req, res) => {
     } catch (error) {
         // Manejo de errores...
     }
-};
-// Ranking combinado (puntuación general)
+};// Ranking combinado (puntuación general)
 export const rankingGeneral = async (req, res) => {
     try {
         const { limite = 10, rol = null } = req.query;
@@ -140,7 +140,7 @@ export const rankingGeneral = async (req, res) => {
                 [sequelize.fn('AVG', sequelize.col('reacciones.aciertos')), 'promedio_reaccion'],
                 [sequelize.fn('AVG', sequelize.col('reacciones.tiempo_total')), 'tiempo_promedio']
             ],
-            group: ['usuario.id'],
+            group: ['usuarios.id'], // Cambiar 'usuario.id' a 'usuarios.id'
             raw: true
         });
 
@@ -190,6 +190,7 @@ export const rankingGeneral = async (req, res) => {
         });
     }
 };
+
 
 // Comparar dos usuarios
 export const compararUsuarios = async (req, res) => {
